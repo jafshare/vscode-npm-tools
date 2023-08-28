@@ -30,6 +30,7 @@ export function activate(context: vscode.ExtensionContext) {
     { scheme: "file", language: "json", pattern: "**/package.json" },
     new DependencyDefinitionProvider()
   );
+  context.subscriptions.push(definitionProvider);
 }
 
 // This method is called when your extension is deactivated

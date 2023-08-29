@@ -1,7 +1,28 @@
 import { existsSync, readJSONSync } from "fs-extra";
 import * as vscode from "vscode";
 import path = require("path");
-
+/**
+ * 当前行是否有效
+ * @param document
+ * @param line
+ * @returns
+ */
+export function isValidLine(document: vscode.TextDocument, line: number): boolean {
+  const documentText = document.getText();
+  const matchFields = ['"dependencies"', '"devDependencies"'];
+  // 指定的区间 dependencies 和 devDependencies
+  return matchFields.some((fileName: string) => {
+    const startPosition = document.positionAt(documentText.indexOf(fileName));
+    const endPosition = document.positionAt(
+      documentText.indexOf("}", document.offsetAt(startPosition))
+    );
+    // 去掉 dependencies 那一行
+    const startLine = startPosition.line + 1;
+    // 去掉 } 那一行
+    const endLine = endPosition.line - 1;
+    return line >= startLine && line <= endLine;
+  });
+}
 /**
  * 由于文件名后缀可能缺失，所以增加后缀
  * @param filename

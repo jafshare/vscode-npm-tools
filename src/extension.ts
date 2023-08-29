@@ -1,8 +1,7 @@
 // The module 'vscode' contains the VS Code extensibility API
 // Import the module and reference it with the alias vscode in your code below
-import { existsSync, readJSONSync } from "fs-extra";
 import * as vscode from "vscode";
-import path = require("path");
+import { getCurrentPackageVersion, getEntryFilePath } from "./utils";
 // 匹配 "@abc"  的格式
 const packageRE = /"[^"]+"/;
 // This method is called when your extension is activated
@@ -97,15 +96,6 @@ function isValidLine(document: vscode.TextDocument, line: number): boolean {
     return line >= startLine && line <= endLine;
   });
 }
-function getCurrentPackageVersion(packagePath: vscode.Uri): string {
-  const packageFilePath = path.join(packagePath.fsPath, "package.json");
-  if (existsSync(packageFilePath)) {
-    const packageObj = readJSONSync(packageFilePath);
-    return packageObj.version;
-  }
-  return "unknown";
-}
-
 class DependencyDefinitionProvider implements vscode.DefinitionProvider {
   provideDefinition(
     document: vscode.TextDocument,
@@ -130,13 +120,9 @@ class DependencyDefinitionProvider implements vscode.DefinitionProvider {
     const word = document.getText(wordRange);
     // 去掉双引号
     const packageName = word.slice(1, word.length - 1);
-    const dest = vscode.Uri.joinPath(
-      // TODO 考虑一个工作区存在多个项目的场景
-      workspace.uri,
-      "node_modules",
-      // 处理 @a/b 的包名场景
-      ...packageName.split("/")
-    );
-    return new vscode.Location(dest, new vscode.Position(0, 0));
+    const entryPath = getEntryFilePath(workspace.uri, packageName);
+    if (entryPath) {
+      return new vscode.Location(entryPath, new vscode.Position(0, 0));
+    }
   }
 }

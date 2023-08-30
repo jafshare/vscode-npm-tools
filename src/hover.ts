@@ -1,6 +1,11 @@
 import * as vscode from "vscode";
-import { getCurrentPackageVersion, isValidLine } from "./utils";
+import {
+  getCurrentPackageVersion,
+  getEntryFilePath,
+  isValidLine,
+} from "./utils";
 import { packageRE } from "./constant";
+import { existsSync } from "fs-extra";
 export class DependencyHoverProvider implements vscode.HoverProvider {
   provideHover(
     document: vscode.TextDocument,
@@ -41,8 +46,39 @@ export class DependencyHoverProvider implements vscode.HoverProvider {
     const currentVersion = getCurrentPackageVersion(packagePath);
     // 显示实际版本号
     const hoverContent = new vscode.MarkdownString(
-      `${packageName}: ${currentVersion}(Current)`
+      `${packageName}: ${currentVersion}(Current)<br/>`
     );
+    const btnMDStrings = [];
+    // file
+    const entryPath = getEntryFilePath(workspace.uri, packageName);
+    const isFileExists = !!entryPath;
+    if (isFileExists) {
+      const fileArgs = { uri: entryPath };
+      const fileUri = vscode.Uri.parse(
+        `command:npmTools.openEntryFile?${encodeURIComponent(
+          JSON.stringify(fileArgs)
+        )}`
+      );
+      btnMDStrings.push(`[Open File](${fileUri})`);
+    }
+    // folder
+    const isFolderExists = existsSync(packagePath.fsPath);
+    if (isFolderExists) {
+      const folderArgs = { uri: packagePath };
+      const folderUri = vscode.Uri.parse(
+        `command:npmTools.openPackageFolder?${encodeURIComponent(
+          JSON.stringify(folderArgs)
+        )}`
+      );
+      btnMDStrings.push(`[Open Folder](${folderUri})`);
+    }
+    if (btnMDStrings.length > 0) {
+      hoverContent.appendMarkdown(btnMDStrings.join(" | "));
+    }
+    // 支持 html 标签
+    hoverContent.supportHtml = true;
+    // 启用 command 的链接,默认是禁用的
+    hoverContent.isTrusted = true;
     const hover = new vscode.Hover(hoverContent, wordRange);
     hover.range = wordRange;
     return hover;

@@ -8,16 +8,30 @@ import { DependencyDefinitionProvider } from "./definition";
 export function activate(context: vscode.ExtensionContext) {
   // Use the console to output diagnostic information (console.log) and errors (console.error)
   // This line of code will only be executed once when your extension is activated
-  console.log('npm-tools is active!');
-  const command = vscode.commands.registerCommand(
-    "npmTools.jumpToPackage",
-    (packagePath: vscode.Uri) => {
-      if (packagePath) {
-        vscode.commands.executeCommand("vscode.openFolder", packagePath);
+  console.log("npm-tools is active!");
+  context.subscriptions.push(
+    vscode.commands.registerCommand(
+      "npmTools.openPackageFolder",
+      (args: { uri: vscode.Uri; options?: { forceNewWindow?: boolean } }) => {
+        if (args) {
+          const options = Object.assign({ forceNewWindow: true }, args.options);
+          vscode.commands.executeCommand(
+            "vscode.openFolder",
+            args.uri,
+            options
+          );
+        }
       }
-    }
+    ),
+    vscode.commands.registerCommand(
+      "npmTools.openEntryFile",
+      (args: { uri: vscode.Uri }) => {
+        if (args) {
+          vscode.commands.executeCommand("vscode.open", args.uri);
+        }
+      }
+    )
   );
-  context.subscriptions.push(command);
   // Register a hover provider for package.json dependencies
   const hoverProvider = vscode.languages.registerHoverProvider(
     { scheme: "file", language: "json", pattern: "**/package.json" },

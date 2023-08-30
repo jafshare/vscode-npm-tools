@@ -16,10 +16,26 @@
   "contributes": {
     "commands": [
       {
-        "command": "npmTools.jumpToPackage",
-        "title": "Jump to package"
+        "command": "npmTools.openPackageFolder",
+        "title": "Open Package Folder"
+      },
+      {
+        "command": "npmTools.openEntryFile",
+        "title": "Open Package Entry File"
       }
-    ]
+    ],
+    "menus": {
+      "commandPalette": [
+        {
+          "command": "npmTools.openPackageFolder",
+          "when": "false"
+        },
+        {
+          "command": "npmTools.openEntryFile",
+          "when": "false"
+        }
+      ]
+    }
   },
   "scripts": {
     "vscode:prepublish": "pnpm run package",

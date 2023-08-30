@@ -32,8 +32,8 @@ export function getFullFileName(filename: string, ext: string = "js") {
   if (!filename) {
     return filename;
   }
-  // 判断是否有后缀(考虑 ./index 的特殊场景)
-  const hasExt = filename.lastIndexOf(".") > 0;
+  // 判断是否有后缀(考虑 ./index 、../index 的特殊场景)
+  const hasExt = /\.[^\.\/\\\s]+$/.test(filename);
   if (!hasExt) {
     filename += `.${ext}`;
   }

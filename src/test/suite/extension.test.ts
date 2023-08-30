@@ -16,12 +16,13 @@ suite("Extension Test Suite", () => {
       ["index", "index.js"],
       ["index.ts", "index.ts"],
       ["index.js", "index.js"],
-      ['./lib/api.js','./lib/api.js'],
-      ["index.", "index."],
+      [".a.ts", ".a.ts"],
+      [".ignore", ".ignore"],
+      ['a.b.js','a.b.js'],
+      ["./lib/api.js", "./lib/api.js"],
       ["index.abc", "index.abc"],
       ["./lib/index", "./lib/index.js"],
-      // TODO 暂时不考虑这种场景
-      // ["../lib/index", "../lib/index.js"],
+      ["../lib/index", "../lib/index.js"],
     ];
     data.forEach(([val, expectVal]) => {
       assert.strictEqual(getFullFileName(val), expectVal);
@@ -37,16 +38,12 @@ suite("Extension Test Suite", () => {
       [
         "package2",
         vscode.Uri.parse(__dirname),
-        vscode.Uri.parse(
-          join(__dirname, "node_modules/package2/index.js")
-        ),
+        vscode.Uri.parse(join(__dirname, "node_modules/package2/index.js")),
       ],
       [
         "package3",
         vscode.Uri.parse(__dirname),
-        vscode.Uri.parse(
-          join(__dirname, "node_modules/package3/index.js")
-        ),
+        vscode.Uri.parse(join(__dirname, "node_modules/package3/index.js")),
       ],
       [
         "@types/package4",
@@ -58,9 +55,7 @@ suite("Extension Test Suite", () => {
       [
         "package5",
         vscode.Uri.parse(__dirname),
-        vscode.Uri.parse(
-          join(__dirname, "node_modules/package5/index.js")
-        ),
+        vscode.Uri.parse(join(__dirname, "node_modules/package5/index.js")),
       ],
     ] as [string, vscode.Uri, vscode.Uri][];
     data.forEach(([pkgName, base, expectVal]) => {

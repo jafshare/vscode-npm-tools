@@ -1,11 +1,12 @@
 {
   "name": "npm-tools",
   "displayName": "npm-tools",
-  "description": "",
+  "description": "对npm的功能增强，增加了对package.json依赖包查看的功能",
   "version": "0.0.1",
   "author": "Hunter Jiang",
+  "publisher": "HunterJiang",
   "license": "MIT",
-  "repository":"https://github.com/jafshare/vscode-npm-tools",
+  "repository": "https://github.com/jafshare/vscode-npm-tools",
   "engines": {
     "vscode": "^1.81.0"
   },
@@ -42,7 +43,7 @@
   },
   "scripts": {
     "vscode:prepublish": "pnpm run package",
-    "vscode:package":"vsce package --baseContentUrl https://raw.githubusercontent.com/jafshare/vscode-npm-tools/main/",
+    "vscode:package": "vsce package --baseContentUrl https://raw.githubusercontent.com/jafshare/vscode-npm-tools/main/",
     "compile": "webpack",
     "watch": "webpack --watch",
     "package": "webpack --mode production --devtool hidden-source-map",

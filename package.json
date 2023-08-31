@@ -5,6 +5,7 @@
   "version": "0.0.1",
   "author": "Hunter Jiang",
   "license": "MIT",
+  "repository":"https://github.com/jafshare/vscode-npm-tools",
   "engines": {
     "vscode": "^1.81.0"
   },
@@ -41,6 +42,7 @@
   },
   "scripts": {
     "vscode:prepublish": "pnpm run package",
+    "vscode:package":"vsce package --baseContentUrl https://raw.githubusercontent.com/jafshare/vscode-npm-tools/main/",
     "compile": "webpack",
     "watch": "webpack --watch",
     "package": "webpack --mode production --devtool hidden-source-map",
@@ -69,8 +71,5 @@
   },
   "dependencies": {
     "fs-extra": "^11.1.1"
-  },
-  "vscode":{
-    "--baseImagesUrl":"https://raw.githubusercontent.com/jafshare/vscode-npm-tools/main/"
   }
 }
